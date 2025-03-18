@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page - MedGPT</title>
+    <link rel="stylesheet" href="/css/mainPageStyle.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/features">Features</a></li>
+            <!-- <li><a href="#">About</a></li> -->
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Section 1: Image Upload -->
+      <section class="image-upload-section">
+        <div class="container">
+          <h2>Upload Your Image</h2>
+          <form
+            action="/predict"
+            id="image-upload-form"
+            enctype="multipart/form-data"
+          >
+            <input type="file" id="image-input" name="image" accept="image/*" />
+            <button type="submit" class="upload-btn">Upload</button>
+          </form>
+          <div id="image-preview" class="image-preview">
+            <p>No image uploaded yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: AI Chat Dialog -->
+      <section class="ai-chat-section">
+        <div class="container">
+          <h2>AI Chat</h2>
+          <div id="chat-box" class="chat-box">
+            <div class="chat-message">
+              <p><strong>AI:</strong> Hello! How can I assist you today?</p>
+            </div>
+          </div>
+          <textarea
+            id="chat-input"
+            placeholder="Type your message..."
+          ></textarea>
+          <button id="send-btn" class="send-btn">Send</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 MedGPT. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script src="/js/mainPage.js"></script>
+  </body>
+</html>
