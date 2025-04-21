@@ -1,16 +1,9 @@
-// Configure multer for file uploads
-
-const cookieParser = require("cookie-parser");
-
-// Define the POST route to handle image uploads and predictions
 const predict = (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No image file uploaded" });
   }
 
-  // Placeholder for prediction logic
-  // const prediction = "No Parkinson's Detected"; // Replace with actual logic
-  const prediction = "78.86% parkinson disease confiremed";
+  const prediction = "";
   res
     .cookie("predictionData", prediction, {
       httpOnly: true,
@@ -18,7 +11,6 @@ const predict = (req, res) => {
       sameSite: "Strict",
     })
     .json({ prediction });
-  // Send the result back to the client
 };
 
 const chat = async (req, res) => {
@@ -74,7 +66,6 @@ const chat = async (req, res) => {
   }
 };
 
-// Simple medical keyword filter
 function isMedicalResponse(response) {
   const medicalKeywords = [
     "disease",
