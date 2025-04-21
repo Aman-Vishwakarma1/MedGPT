@@ -6,9 +6,20 @@
       "src": "index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["./dist/**", "./node_modules/swagger-ui-dist/**"]
+        "includeFiles": [
+          "views/**",
+          "public/**",
+          "models/**",
+          "controllers/**",
+          "node_modules/swagger-ui-dist/**"
+        ]
       }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "/" }]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
 }
