@@ -18,17 +18,23 @@ const chat = async (req, res) => {
   const predictionData = req.cookies?.predictionData;
   const apiKey = process.env.GEMINI_AI_KEY;
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-  const medicalPrompt = `You are a highly experienced medical doctor with 20+ years of expertise. 
+  let medicalPrompt = "";
+  if (predictionData === undefined) {
+    medicalPrompt = `You are a highly experienced medical doctor with 20+ years of expertise. 
   Only respond to medical science-related queries, such as diseases, symptoms, treatments, medical procedures, and general healthcare advice. 
-  If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.
-  
-  The AI diagnostic model provided the following medical prediction:
-  "${predictionData}"
-  
-  Based on this prediction, and the patient's question below, provide professional advice:
-  "${predictionData}"
-    `;
+  If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.`;
+  } else {
+    medicalPrompt = `You are a highly experienced medical doctor with 20+ years of expertise. 
+    Only respond to medical science-related queries, such as diseases, symptoms, treatments, medical procedures, and general healthcare advice. 
+    If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.
+    
+    The AI diagnostic model provided the following medical prediction:
+    "${predictionData}"
+    
+    Based on this prediction, and the patient's question below, provide professional advice:
+    "${predictionData}"
+      `;
+  }
 
   try {
     const response = await fetch(apiUrl, {
