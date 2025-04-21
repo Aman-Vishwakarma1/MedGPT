@@ -35,8 +35,9 @@ const mainPage = async (req, res, next) => {
 //Page Functionalities
 
 const registerUser = async (req, res, next) => {
-  const { name, email, password } = req.body;
-
+  let { name, email, password } = req.body;
+  name = name.toLowerCase();
+  email = email.toLowerCase();
   if (!name || !email || !password) {
     return res
       .status(203)
@@ -66,12 +67,13 @@ const registerUser = async (req, res, next) => {
       });
     }
   });
-  res.status(200).redirect("userRegisteredSuccess.ejs", { name, email });
+  res.status(200).render("userRegisteredSuccess.ejs", { name, email });
 };
 
 const loginUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = email.toLowerCase();
     console.log(email, password);
     if (!email || !password) {
       return res.render("errorPage.ejs", {
