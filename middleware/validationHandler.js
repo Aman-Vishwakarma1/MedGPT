@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../model/userSchema");
 const validate = async (req, res, next) => {
   const token = req.cookies?.token;
-  console.log(req.cookies);
+  // console.log(req.cookies);
   if (!token) {
     return res.render("errorPage.ejs", {
       errorMessage: "Please Login First !",

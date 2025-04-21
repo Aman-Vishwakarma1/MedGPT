@@ -1,5 +1,7 @@
 // Configure multer for file uploads
 
+const cookieParser = require("cookie-parser");
+
 // Define the POST route to handle image uploads and predictions
 const predict = (req, res) => {
   if (!req.file) {
@@ -7,23 +9,34 @@ const predict = (req, res) => {
   }
 
   // Placeholder for prediction logic
-  const prediction = "No Parkinson's Detected"; // Replace with actual logic
-
+  // const prediction = "No Parkinson's Detected"; // Replace with actual logic
+  const prediction = "78.86% parkinson disease confiremed";
+  res
+    .cookie("predictionData", prediction, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "Strict",
+    })
+    .json({ prediction });
   // Send the result back to the client
-  res.json({ prediction });
 };
 
 const chat = async (req, res) => {
   const { data } = req.body;
-
+  const predictionData = req.cookies?.predictionData;
   const apiKey = process.env.GEMINI_AI_KEY;
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-  const medicalPrompt = `
-    You are a highly experienced medical doctor with 20+ years of expertise. 
-    Only respond to medical science-related queries, such as diseases, symptoms, treatments, medical procedures, and general healthcare advice. 
-    If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.
-  `;
+  const medicalPrompt = `You are a highly experienced medical doctor with 20+ years of expertise. 
+  Only respond to medical science-related queries, such as diseases, symptoms, treatments, medical procedures, and general healthcare advice. 
+  If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.
+  
+  The AI diagnostic model provided the following medical prediction:
+  "${predictionData}"
+  
+  Based on this prediction, and the patient's question below, provide professional advice:
+  "${predictionData}"
+    `;
 
   try {
     const response = await fetch(apiUrl, {

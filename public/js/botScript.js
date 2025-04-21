@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
       sender === "bot" ? formatMessage(message) : message;
 
     messageElement.innerHTML = `<p><strong>${
-      sender === "user" ? "You" : "DR. VCET"
+      sender === "user" ? "You" : "DR. Pandu"
     }:</strong> ${formattedMessage}</p>`;
 
     chatbotMessages.appendChild(messageElement);
