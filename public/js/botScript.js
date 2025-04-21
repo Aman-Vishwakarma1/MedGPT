@@ -15,12 +15,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function sendMessage() {
-    const userMessage = chatbotInput.value.trim();
-    if (userMessage) {
-      appendMessage("user", userMessage);
-      chatbotInput.value = "";
-      getBotResponse(userMessage);
+  async function sendMessage() {
+    const promptText = chatbotInput.value.trim();
+    chatbotInput.value = "";
+    if (promptText) {
+      appendMessage("user", promptText);
+      try {
+        const response = await fetch("/image/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: promptText,
+          }),
+        });
+
+        const { message } = await response.json();
+        appendMessage("bot", message);
+      } catch (error) {
+        console.error("Error:", error);
+        appendMessage("bot", "Sorry, something went wrong.");
+      }
     }
   }
 
@@ -64,86 +80,5 @@ document.addEventListener("DOMContentLoaded", function () {
     message = message.replace(/\n/g, "<br>");
 
     return message;
-  }
-
-  async function getBotResponse(userMessage) {
-    const apiKey = "API-KEY";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    const medicalPrompt = `
-      You are a highly experienced medical doctor with 20+ years of expertise. 
-      Only respond to medical science-related queries, such as diseases, symptoms, treatments, medical procedures, and general healthcare advice. 
-      If the user asks about something unrelated to medicine, politely decline to answer and encourage them to ask a medical question.
-    `;
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: medicalPrompt }, { text: userMessage }],
-            },
-          ],
-        }),
-      });
-
-      const data = await response.json();
-      let botMessage =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "I'm not sure how to respond.";
-
-      // Ensure the response is medical-related
-      if (
-        botMessage.toLowerCase().includes("i'm not sure") ||
-        !isMedicalResponse(botMessage)
-      ) {
-        botMessage =
-          "I'm here to answer medical-related questions. Please ask about health, diseases, treatments, or medical procedures.";
-      }
-
-      appendMessage("bot", botMessage);
-    } catch (error) {
-      console.error("Error fetching bot response:", error);
-      appendMessage("bot", "Sorry, something went wrong. Please try again.");
-    }
-  }
-
-  function isMedicalResponse(response) {
-    const medicalKeywords = [
-      "disease",
-      "symptoms",
-      "treatment",
-      "doctor",
-      "medicine",
-      "surgery",
-      "health",
-      "infection",
-      "therapy",
-      "diagnosis",
-      "prescription",
-      "injury",
-      "pain",
-      "hospital",
-      "patient",
-      "illness",
-      "virus",
-      "bacteria",
-      "vaccine",
-      "blood pressure",
-      "cardiology",
-      "neurology",
-      "orthopedic",
-      "pediatrics",
-      "dermatology",
-      "gastroenterology",
-    ];
-
-    return medicalKeywords.some((keyword) =>
-      response.toLowerCase().includes(keyword)
-    );
   }
 });

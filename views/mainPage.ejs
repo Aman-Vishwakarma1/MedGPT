@@ -19,20 +19,21 @@
       </div>
     </header>
 
-    <main>
-      <br />
-      <br />
+    <main class="main-sections-wrapper">
       <!-- Section 1: Image Upload -->
       <section class="image-upload-section">
         <div class="container">
           <h2>Upload Your Image</h2>
           <form
             action="/image/predict"
+            method="POST"
             id="image-upload-form"
             enctype="multipart/form-data"
           >
             <input type="file" id="image-input" name="image" accept="image/*" />
-            <button type="submit" class="upload-btn">Upload</button>
+            <button type="submit" id="image-submit-button" class="upload-btn">
+              Upload
+            </button>
           </form>
           <div id="image-preview" class="image-preview">
             <p>No image uploaded yet.</p>
@@ -69,6 +70,39 @@
         <p>&copy; 2025 MedGPT. All Rights Reserved.</p>
       </div>
     </footer>
+
+    <script>
+      // Image upload handling
+      document
+        .getElementById("image-submit-button")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          // Get the form element
+          const form = e.target.closest("form"); // Find the form containing the button
+          const formData = new FormData(form); // Create FormData from the form
+
+          try {
+            // Send the image data to the backend
+            const res = await fetch(form.action, {
+              method: "POST",
+              body: formData,
+            });
+
+            const data = await res.json(); // Parse response as JSON
+            document.getElementById("image-preview").innerHTML = `
+              <p><strong>Prediction:</strong> ${
+                data.prediction || "No result"
+              }</p>
+            `;
+          } catch (err) {
+            console.error("Error uploading image:", err);
+            document.getElementById("image-preview").innerHTML = `
+              <p style="color:red;">Upload failed. Please try again.</p>
+            `;
+          }
+        });
+    </script>
 
     <script src="/js/botScript.js"></script>
   </body>
