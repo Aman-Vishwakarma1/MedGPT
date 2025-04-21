@@ -3,7 +3,7 @@ const predict = (req, res) => {
     return res.status(400).json({ error: "No image file uploaded" });
   }
 
-  const prediction = "";
+  const prediction = "no parkinson disease";
   res
     .cookie("predictionData", prediction, {
       httpOnly: true,
