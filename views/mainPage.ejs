@@ -90,10 +90,15 @@
             });
 
             const data = await res.json(); // Parse response as JSON
+
+            // Check if prediction and conclusion are available
+            const prediction = data.prediction || "No result";
+            const conclusion = data.conclusion || "No conclusion available";
+
+            // Display prediction and conclusion
             document.getElementById("image-preview").innerHTML = `
-              <p><strong>Prediction:</strong> ${
-                data.prediction || "No result"
-              }</p>
+              <p><strong>Prediction:</strong> ${prediction}</p>
+              <p><strong>Conclusion:</strong> ${conclusion}</p>
             `;
           } catch (err) {
             console.error("Error uploading image:", err);
